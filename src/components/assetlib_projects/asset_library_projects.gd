@@ -66,7 +66,7 @@ func _generate_query_dictionary() -> Dictionary:
 		result.support.append("testing")
 	
 	if _search_field.text.strip_edges() != "":
-		result.filter = _search_field.text.strip_edges() # TODO encode
+		result.filter = _search_field.text.strip_edges()
 	
 	# TODO version
 	
