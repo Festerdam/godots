@@ -32,15 +32,15 @@ func _generate_query(pairs: Dictionary) -> String:
 	for key in pairs:
 		if not pairs[key]:
 			continue
-		if pairs[key] is String:
-			result_url += key + "=" + pairs[key].uri_encode() + "&"
+		if pairs[key] is String or pairs[key] is int:
+			result_url += key + "=" + str(pairs[key]).uri_encode() + "&"
 		elif pairs[key] is bool:
 			result_url += key + "&"
 		elif pairs[key] is Array:
 			result_url += key + "="
 			var list = ""
 			for element in pairs[key]:
-				list += element.uri_encode() + "+"
+				list += str(element).uri_encode() + "+"
 			result_url += list.trim_suffix("+") + "&"
 	
 	return result_url.trim_suffix("&")
