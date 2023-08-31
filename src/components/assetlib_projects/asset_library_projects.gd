@@ -10,19 +10,25 @@ const _TUXFAMILY_VERSION_LISTING = "https://downloads.tuxfamily.org/godotengine/
 const _EXML = preload("res://src/extensions/xml.gd")
 
 var _current_page: int = 0
+var _current_assets: Dictionary
 
 @onready var _search_field: LineEdit = %SearchField
 @onready var _version_option: OptionButton = %VersionOption
 @onready var _sort_option: OptionButton = %SortOption
 @onready var _category_option: OptionButton = %CategoryOption
 @onready var _support_options: MenuButton = %SupportOptions
+@onready var _asset_querier: HTTPRequest = $AssetQuerier
 
 
 func _ready():
 	$ScrollContainer.add_theme_stylebox_override("panel",
 			get_theme_stylebox("search_panel", "ProjectManager"))
 	
+	_support_options.get_popup().id_pressed.connect(_fetch_assets)
+	
 	await _setup_version_button()
+	
+	_fetch_assets()
 
 
 func _setup_version_button():
@@ -34,6 +40,26 @@ func _setup_version_button():
 	
 	for version in versions:
 		_version_option.add_item(version)
+
+
+func _fetch_assets(_trash = null):
+	var query = _generate_query(_generate_query_dictionary())
+	_asset_querier.cancel_request()
+	_asset_querier.request(query)
+
+
+func _on_asset_querier_request_completed(result: int, response_code: int,
+		_headers: PackedStringArray, byte_body: PackedByteArray):
+	if result != HTTPRequest.RESULT_SUCCESS or response_code != 200:
+		_current_assets = {}
+		return
+	
+	var body = byte_body.get_string_from_ascii()
+	var json = JSON.new()
+	if json.parse(body) != OK or not json.data is Dictionary:
+		_current_assets = {}
+		return
+	_current_assets = json.data
 
 
 ## Fetches all versions (strings in the MAJOR.MINOR.PATCH format) listed

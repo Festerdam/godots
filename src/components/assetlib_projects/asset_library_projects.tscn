@@ -182,3 +182,12 @@ text = "Next"
 [node name="LastButton" type="Button" parent="ScrollContainer/VBoxContainer/NavigationButtons2"]
 layout_mode = 2
 text = "Last"
+
+[node name="AssetQuerier" type="HTTPRequest" parent="."]
+timeout = 4.0
+
+[connection signal="text_changed" from="SearchField" to="." method="_fetch_assets"]
+[connection signal="item_selected" from="FilterSortOptions/VersionOption" to="." method="_fetch_assets"]
+[connection signal="item_selected" from="FilterSortOptions/SortOption" to="." method="_fetch_assets"]
+[connection signal="item_selected" from="FilterSortOptions/CategoryOption" to="." method="_fetch_assets"]
+[connection signal="request_completed" from="AssetQuerier" to="." method="_on_asset_querier_request_completed"]
