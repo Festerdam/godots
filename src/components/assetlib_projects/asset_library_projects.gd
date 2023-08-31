@@ -45,7 +45,7 @@ func _setup_version_button():
 		_version_option.add_item(version)
 
 
-func _on_search_field_text_changed(new_text):
+func _on_search_field_text_changed(_new_text: String):
 	_last_text_edit = Time.get_ticks_msec()
 	await get_tree().create_timer(1).timeout
 	if Time.get_ticks_msec() - _last_text_edit >= 1000:
@@ -111,7 +111,7 @@ func _fetch_versions() -> Array[String]:
 	var body = resp[3].get_string_from_ascii()
 	var regex = RegEx.new()
 	regex.compile("(?<=td class=\\\"n\\\"><a href=\\\")\\d\\.\\d(\\.\\d)?")
-	var result: Array[String]
+	var result: Array[String] = []
 	result.assign(
 			regex.search_all(body).map(func (x): return x.get_string())
 	)
