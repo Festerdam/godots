@@ -8,9 +8,10 @@ const _ASSETS_PER_PAGE = 40
 const _TUXFAMILY_VERSION_LISTING = "https://downloads.tuxfamily.org/godotengine/"
 # Shouldn't we be using class_name in xml.gd?
 const _EXML = preload("res://src/extensions/xml.gd")
+const _ASSET_LISTING = preload("res://src/components/assetlib_projects/asset_listing.tscn")
 
 var _current_page: int = 0
-var _current_assets: Dictionary
+var _current_assets: Dictionary: set = _display_assets
 
 @onready var _search_field: LineEdit = %SearchField
 @onready var _version_option: OptionButton = %VersionOption
@@ -18,6 +19,7 @@ var _current_assets: Dictionary
 @onready var _category_option: OptionButton = %CategoryOption
 @onready var _support_options: MenuButton = %SupportOptions
 @onready var _asset_querier: HTTPRequest = $AssetQuerier
+@onready var _asset_list: HFlowContainer = %AssetList
 
 
 func _ready():
@@ -60,6 +62,31 @@ func _on_asset_querier_request_completed(result: int, response_code: int,
 		_current_assets = {}
 		return
 	_current_assets = json.data
+
+
+func _display_assets(current_assets: Dictionary):
+	_current_assets = current_assets
+	_clear_asset_display()
+	if current_assets == {} or current_assets.total_items == 0:
+		return
+	
+	var assets = current_assets.result
+	for asset_data in assets:
+		var asset = _ASSET_LISTING.instantiate().init(
+				int(asset_data.asset_id),
+				asset_data.title,
+				asset_data.category,
+				asset_data.author,
+				asset_data.cost
+		)
+		
+		_asset_list.add_child(asset)
+
+
+## Clears all assets being displayed.
+func _clear_asset_display():
+	for child in _asset_list.get_children():
+		child.queue_free()
 
 
 ## Fetches all versions (strings in the MAJOR.MINOR.PATCH format) listed
