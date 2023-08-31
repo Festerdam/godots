@@ -5,6 +5,9 @@ extends VBoxContainer
 
 const _ASSET_QUERY_PREFIX = "https://godotengine.org/asset-library/api/asset?"
 const _ASSETS_PER_PAGE = 40
+const _TUXFAMILY_VERSION_LISTING = "https://downloads.tuxfamily.org/godotengine/"
+# Shouldn't we be using class_name in xml.gd?
+const _EXML = preload("res://src/extensions/xml.gd")
 
 var _current_page: int = 0
 
@@ -18,6 +21,27 @@ var _current_page: int = 0
 func _ready():
 	$ScrollContainer.add_theme_stylebox_override("panel",
 			get_theme_stylebox("search_panel", "ProjectManager"))
+
+
+## Fetches all versions (strings in the MAJOR.MINOR.PATCH format) listed
+## on TuxFamily.  Returns [code][][/code] on failure.
+func _fetch_versions() -> Array[String]:
+	var request = HTTPRequest.new()
+	add_child(request)
+	request.request(_TUXFAMILY_VERSION_LISTING)
+	var resp = await request.request_completed
+	request.queue_free()
+	if resp[0] != HTTPRequest.RESULT_SUCCESS or resp[1] != 200:
+		return []
+	
+	var body = resp[3].get_string_from_ascii()
+	var regex = RegEx.new()
+	regex.compile("(?<=td class=\\\"n\\\"><a href=\\\")\\d\\.\\d(\\.\\d)?")
+	var result: Array[String]
+	result.assign(
+			regex.search_all(body).map(func (x): return x.get_string())
+	)
+	return result
 
 
 ## Generates a query to the asset library, using the keys and values of
