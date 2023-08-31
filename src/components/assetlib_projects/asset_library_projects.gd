@@ -21,6 +21,19 @@ var _current_page: int = 0
 func _ready():
 	$ScrollContainer.add_theme_stylebox_override("panel",
 			get_theme_stylebox("search_panel", "ProjectManager"))
+	
+	await _setup_version_button()
+
+
+func _setup_version_button():
+	var versions = await _fetch_versions()
+	versions.reverse()
+	if versions == []:
+		_version_option.disabled = true
+		return
+	
+	for version in versions:
+		_version_option.add_item(version)
 
 
 ## Fetches all versions (strings in the MAJOR.MINOR.PATCH format) listed
