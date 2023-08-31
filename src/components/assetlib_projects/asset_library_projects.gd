@@ -105,7 +105,13 @@ func _generate_query_dictionary() -> Dictionary:
 	if _search_field.text.strip_edges() != "":
 		result.filter = _search_field.text.strip_edges()
 	
-	# TODO version
+	# If disabled will list godot 2 assets, due to the way the API works.
+	if _version_option.get_selected_id() != -1:
+		result.godot_version = _version_option.get_item_text(
+				_version_option.get_item_index(
+						_version_option.get_selected_id()
+				)
+		)
 	
 	result.max_results = _ASSETS_PER_PAGE
 	
