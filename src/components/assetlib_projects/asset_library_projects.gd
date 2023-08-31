@@ -12,6 +12,7 @@ const _ASSET_LISTING = preload("res://src/components/assetlib_projects/asset_lis
 
 var _current_page: int = 0
 var _current_assets: Dictionary: set = _display_assets
+var _last_text_edit: int = 0
 
 @onready var _search_field: LineEdit = %SearchField
 @onready var _version_option: OptionButton = %VersionOption
@@ -42,6 +43,13 @@ func _setup_version_button():
 	
 	for version in versions:
 		_version_option.add_item(version)
+
+
+func _on_search_field_text_changed(new_text):
+	_last_text_edit = Time.get_ticks_msec()
+	await get_tree().create_timer(1).timeout
+	if Time.get_ticks_msec() - _last_text_edit >= 1000:
+		_fetch_assets()
 
 
 func _fetch_assets(_trash = null):
