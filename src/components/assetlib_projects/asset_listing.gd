@@ -2,7 +2,6 @@ class_name AssetListing
 extends HBoxContainer
 
 
-const _ASSET_URL_PREFIX = "https://godotengine.org/asset-library/api/asset/"
 const _ASSET_DIALOG_SCENE = preload("res://src/components/assetlib_projects/asset_dialog.tscn")
 
 var _id: int
@@ -41,11 +40,6 @@ func init(id: int, title: String, category: String, author: String,
 	_license = license
 	_interactible = interactible
 	return self
-
-
-## Returns the asset's url in the asset library.
-func get_assetlib_url() -> String:
-	return _ASSET_URL_PREFIX.path_join(str(_id))
 
 
 func _on_title_pressed():
