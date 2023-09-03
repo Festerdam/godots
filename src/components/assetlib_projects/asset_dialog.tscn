@@ -7,6 +7,7 @@ title = ""
 position = Vector2i(0, 36)
 size = Vector2i(466, 333)
 ok_button_text = "Download"
+cancel_button_text = "Close"
 script = ExtResource("1_kbywm")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
