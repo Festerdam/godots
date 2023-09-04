@@ -34,5 +34,8 @@ bbcode_enabled = true
 [node name="PreviewImages" type="VBoxContainer" parent="HBoxContainer"]
 layout_mode = 2
 
+[node name="AssetInfoDownloader" type="HTTPRequest" parent="."]
+
 [connection signal="about_to_popup" from="." to="." method="_on_about_to_popup"]
 [connection signal="meta_clicked" from="HBoxContainer/VBoxContainer/DescriptionLabel" to="." method="_on_rich_text_label_meta_clicked"]
+[connection signal="request_completed" from="AssetInfoDownloader" to="." method="_on_asset_info_downloader_request_completed"]

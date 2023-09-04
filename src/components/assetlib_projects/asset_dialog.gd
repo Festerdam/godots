@@ -5,19 +5,22 @@ extends ConfirmationDialog
 
 const _ASSET_URL_PREFIX = "https://godotengine.org/asset-library/api/asset/"
 const _ASSET_LISTING_SCENE = preload("res://src/components/assetlib_projects/asset_listing.tscn")
-const _DESCRIPTION_FORMAT_STRING = """Version: {0}
-Content: [url={1}]View Files[/url]
+
+var _description_format_string = tr("""Version: {version_string}
+Content: [url={browse_url}]View Files[/url]
 Description:
 
-{2}"""
-
+{description}""")
 var _id: int
 var _asset_listing: AssetListing
+var _download_url: String
 
 @onready var _description_label: RichTextLabel = %DescriptionLabel
+@onready var _asset_info_downloader: HTTPRequest = $AssetInfoDownloader
 
 
 func _ready():
+	get_ok_button().disabled = true
 	var listing_parent = $HBoxContainer/VBoxContainer
 	listing_parent.add_child(_asset_listing)
 	listing_parent.move_child(_asset_listing, 0)
@@ -40,9 +43,27 @@ func _get_assetlib_url() -> String:
 
 
 func _on_about_to_popup():
-	_description_label.text = _DESCRIPTION_FORMAT_STRING.format(
-			["1.0.1", "https://example.com", "An example plugin."]
-	)
+	_asset_info_downloader.request(_get_assetlib_url())
+
+
+func _on_asset_info_downloader_request_completed(result: int,
+		response_code: int, _headers: PackedStringArray,
+		byte_body: PackedByteArray):
+	var error_message = tr("Error!")
+	if result != HTTPRequest.RESULT_SUCCESS or response_code != 200:
+		_description_label.text = error_message
+		return
+	
+	# TODO could it contain unicode?
+	var body = byte_body.get_string_from_ascii()
+	var json = JSON.new()
+	if json.parse(body) != OK or not json.data is Dictionary:
+		_description_label.text = error_message
+		return
+	
+	_download_url = json.data.download_url
+	_description_label.text = _description_format_string.format(json.data)
+	get_ok_button().disabled = false
 
 
 func _on_rich_text_label_meta_clicked(meta):
