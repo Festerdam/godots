@@ -6,4 +6,5 @@
 [node name="AssetListingIteractable" instance=ExtResource("1_oixga")]
 script = ExtResource("2_qu75l")
 
-[connection signal="pressed" from="VBoxContainer/Title" to="." method="_on_title_pressed"]
+[connection signal="pressed" from="Icon" to="." method="_open_popup"]
+[connection signal="pressed" from="VBoxContainer/Title" to="." method="_open_popup"]

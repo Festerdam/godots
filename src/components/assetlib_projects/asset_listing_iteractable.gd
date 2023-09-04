@@ -29,5 +29,5 @@ func init_asset_listing_interactible(id: int, title: String,
 	return self
 
 
-func _on_title_pressed():
+func _open_popup():
 	_asset_dialog.popup_centered()
