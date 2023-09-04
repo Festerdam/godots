@@ -31,7 +31,7 @@ layout_mode = 2
 size_flags_vertical = 3
 bbcode_enabled = true
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="HBoxContainer"]
+[node name="PreviewImages" type="VBoxContainer" parent="HBoxContainer"]
 layout_mode = 2
 
 [connection signal="about_to_popup" from="." to="." method="_on_about_to_popup"]
