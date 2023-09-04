@@ -8,7 +8,7 @@ const _ASSETS_PER_PAGE = 40
 const _TUXFAMILY_VERSION_LISTING = "https://downloads.tuxfamily.org/godotengine/"
 # Shouldn't we be using class_name in xml.gd?
 const _EXML = preload("res://src/extensions/xml.gd")
-const _ASSET_LISTING = preload("res://src/components/assetlib_projects/asset_listing.tscn")
+const _ASSET_LISTING = preload("res://src/components/assetlib_projects/asset_listing_iteractable.tscn")
 
 var _current_page: int = 0
 var _current_assets: Dictionary: set = _display_assets
@@ -80,7 +80,7 @@ func _display_assets(current_assets: Dictionary):
 	
 	var assets = current_assets.result
 	for asset_data in assets:
-		var asset = _ASSET_LISTING.instantiate().init(
+		var asset = _ASSET_LISTING.instantiate().init_asset_listing_interactible(
 				int(asset_data.asset_id),
 				asset_data.title,
 				asset_data.category,

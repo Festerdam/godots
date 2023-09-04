@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://birwt63v5rr5c"]
 
-[ext_resource type="Script" path="res://src/components/assetlib_projects/asset_dialog.gd" id="1_8ypdu"]
+[ext_resource type="Script" path="res://src/components/assetlib_projects/asset_dialog.gd" id="1_7i63p"]
 
 [node name="AssetDialog" type="ConfirmationDialog"]
 title = ""
@@ -8,7 +8,7 @@ position = Vector2i(0, 36)
 size = Vector2i(466, 333)
 ok_button_text = "Download"
 cancel_button_text = "Close"
-script = ExtResource("1_8ypdu")
+script = ExtResource("1_7i63p")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 anchors_preset = 15

@@ -26,8 +26,8 @@ func init(id: int, title: String, category: String, author: String,
 		license: String):
 	_id = id
 	self.title = title
-	_asset_listing = _ASSET_LISTING_SCENE.instantiate().init(
-			id, title, category, author, license, false
+	_asset_listing = _ASSET_LISTING_SCENE.instantiate().init_asset_listing(
+			title, category, author, license
 	)
 	return self
 
