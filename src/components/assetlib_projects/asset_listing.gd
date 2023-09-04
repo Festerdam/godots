@@ -1,5 +1,9 @@
 class_name AssetListing
 extends HBoxContainer
+## Class for the listing of an asset.
+##
+## This class does not handle interaction see asset_listing_interactible.gd
+## instead.
 
 
 var _title: String

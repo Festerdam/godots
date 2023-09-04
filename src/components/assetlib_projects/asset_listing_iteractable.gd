@@ -1,4 +1,10 @@
 extends AssetListing
+## Interactible AssetListing.
+##
+## Exists as a separate file, because, although it would run at first,
+## Godot's resource loader on startup would think that there is a
+## problematic dependency cycle.  This is due to the fact that both
+## AssetListItem and AssetDialogue would be referencing each other.
 
 
 const _ASSET_DIALOG_SCENE = preload("res://src/components/assetlib_projects/asset_dialog.tscn")

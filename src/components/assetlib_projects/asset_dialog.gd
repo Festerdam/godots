@@ -1,4 +1,6 @@
 extends ConfirmationDialog
+## Dialogue describing an asset, with all information pertaining to it
+## and the option to download it.
 
 
 const _ASSET_URL_PREFIX = "https://godotengine.org/asset-library/api/asset/"
