@@ -14,7 +14,10 @@ const _TUXFAMILY_VERSION_LISTING = "https://downloads.tuxfamily.org/godotengine/
 const _EXML = preload("res://src/extensions/xml.gd")
 const _ASSET_LISTING = preload("res://src/components/assetlib_projects/asset_listing_iteractable.tscn")
 
-var _current_page: int = 0
+var _current_page: int = 0:
+	set(value):
+		_current_page = value
+		_fetch_assets()
 var _current_assets: Dictionary: set = _display_assets
 var _last_text_edit: int = 0
 
@@ -26,6 +29,7 @@ var _last_text_edit: int = 0
 @onready var _asset_querier: HTTPRequest = $AssetQuerier
 @onready var _asset_list: HFlowContainer = %AssetList
 @onready var _navigation_buttons: HBoxContainer = %NavigationButtons
+@onready var _page_buttons: HBoxContainer = _navigation_buttons.get_node("PageButtons")
 
 
 func _ready():
@@ -35,11 +39,10 @@ func _ready():
 	_support_options.get_popup().id_pressed.connect(_fetch_assets)
 	
 	# Populate PageButtons
-	var page_buttons = _navigation_buttons.get_node("PageButtons")
 	for i in _MAX_PAGE_BUTTONS:
 		var button = Button.new()
 		button.name = "PageButton" + str(i)
-		page_buttons.add_child(button)
+		_page_buttons.add_child(button)
 		button.pressed.connect(func():
 				_on_page_button_pressed(button)
 		)
@@ -109,10 +112,48 @@ func _display_assets(current_assets: Dictionary):
 		_asset_list.add_child(asset)
 
 
+func _clear_navigation_buttons():
+	for button in _page_buttons.get_children():
+		button.hide()
+
+
 ## Sets up the navigation buttons, taking into account number of pages
 ## and current page number.
 func _display_navigation():
-	pass # TODO 
+	_clear_navigation_buttons()
+	if not _current_assets or _current_assets.pages == 0:
+		_navigation_buttons.hide()
+		return
+	_navigation_buttons.show()
+	var buttons = _page_buttons.get_children()
+#	var needed_button_amount = min(10, _current_assets.pages - _current_page)
+#	_clear_navigation_buttons()
+#	for i in needed_button_amount:
+#		_page_buttons[i].show()
+	if _current_page <= _MAX_PAGE_BUTTONS / 2 or _current_assets.pages <= _MAX_PAGE_BUTTONS:
+		var needed_button_amount = min(_MAX_PAGE_BUTTONS, _current_assets.pages)
+		for i in needed_button_amount:
+			buttons[i].show()
+			buttons[i].text = str(i + 1)
+			buttons[i].disabled = false
+			if i == _current_page:
+				buttons[i].disabled = true
+	elif _current_page + _MAX_PAGE_BUTTONS / 2 + 1 > _current_assets.pages:
+		var needed_button_amount = _MAX_PAGE_BUTTONS
+		for i in needed_button_amount:
+			buttons[i].show()
+			buttons[i].text = str(i + 1 + _current_assets.pages - _MAX_PAGE_BUTTONS)
+			buttons[i].disabled = false
+			if i + _current_assets.pages - _MAX_PAGE_BUTTONS == _current_page:
+				buttons[i].disabled = true
+	else:
+		var needed_button_amount = _MAX_PAGE_BUTTONS
+		for i in needed_button_amount:
+			buttons[i].show()
+			buttons[i].text = str(i + 1 + _current_page + _MAX_PAGE_BUTTONS / 2 - _MAX_PAGE_BUTTONS)
+			buttons[i].disabled = false
+			if i + _current_page + _MAX_PAGE_BUTTONS / 2 - _MAX_PAGE_BUTTONS == _current_page:
+				buttons[i].disabled = true
 
 
 ## Clears all assets being displayed.
@@ -227,4 +268,4 @@ func _generate_query_dictionary() -> Dictionary:
 
 
 func _on_page_button_pressed(button: Button):
-	pass # TODO
+	_current_page = int(button.text) - 1
