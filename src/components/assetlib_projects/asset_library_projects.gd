@@ -30,6 +30,10 @@ var _last_text_edit: int = 0
 @onready var _asset_list: HFlowContainer = %AssetList
 @onready var _navigation_buttons: HBoxContainer = %NavigationButtons
 @onready var _page_buttons: HBoxContainer = _navigation_buttons.get_node("PageButtons")
+@onready var _first_button: Button = _navigation_buttons.get_node("FirstButton")
+@onready var _previous_button: Button = _navigation_buttons.get_node("PreviousButton")
+@onready var _next_button: Button = _navigation_buttons.get_node("NextButton")
+@onready var _last_button: Button = _navigation_buttons.get_node("LastButton")
 
 
 func _ready():
@@ -47,19 +51,19 @@ func _ready():
 				_on_page_button_pressed(button)
 		)
 	
-	_navigation_buttons.get_node("FirstButton").pressed.connect(func():
+	_first_button.pressed.connect(func():
 		_current_page = 0
 	)
-	_navigation_buttons.get_node("PreviousButton").pressed.connect(func():
+	_previous_button.pressed.connect(func():
 		_current_page = max(0, _current_page - 1)
 	)
-	_navigation_buttons.get_node("NextButton").pressed.connect(func():
+	_next_button.pressed.connect(func():
 		if _current_assets:
 			_current_page = min(_current_assets.pages - 1, _current_page + 1)
 		else:
 			_current_page = 0
 	)
-	_navigation_buttons.get_node("LastButton").pressed.connect(func():
+	_last_button.pressed.connect(func():
 		_current_page = _current_assets.pages - 1 if _current_assets else 0
 	)
 	
@@ -151,6 +155,22 @@ func _display_navigation():
 		buttons[i].show()
 		buttons[i].text = str(start_page + i + 1)
 		buttons[i].disabled = start_page + i == _current_page
+	
+	if _current_page == 0:
+		_first_button.disabled = true
+		_previous_button.disabled = true
+		_next_button.disabled = false # Assumes more than one page
+		_last_button.disabled = false
+	elif _current_page == _current_assets.pages - 1:
+		_first_button.disabled = false
+		_previous_button.disabled = false
+		_next_button.disabled = true
+		_last_button.disabled = true
+	else:
+		_first_button.disabled = false
+		_previous_button.disabled = false
+		_next_button.disabled = false
+		_last_button.disabled = false
 
 
 ## Clears all assets being displayed.
