@@ -15,9 +15,12 @@ const _EXML = preload("res://src/extensions/xml.gd")
 const _ASSET_LISTING = preload("res://src/components/assetlib_projects/asset_listing_iteractable.tscn")
 
 var _current_page: int = 0:
+	get:
+		return _internal_current_page
 	set(value):
-		_current_page = value
-		_fetch_assets()
+		_internal_current_page = value
+		_fetch_assets(null, false)
+var _internal_current_page: int = 0
 var _current_assets: Dictionary: set = _display_assets
 var _last_text_edit: int = 0
 
@@ -90,7 +93,9 @@ func _on_search_field_text_changed(_new_text: String):
 		_fetch_assets()
 
 
-func _fetch_assets(_trash = null):
+func _fetch_assets(_trash = null, reset_page_number: bool = true):
+	if reset_page_number:
+		_internal_current_page = 0
 	var query = _generate_query(_generate_query_dictionary())
 	_asset_querier.cancel_request()
 	_asset_querier.request(query)
