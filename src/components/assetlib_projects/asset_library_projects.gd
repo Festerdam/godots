@@ -146,7 +146,8 @@ func _display_navigation():
 		return
 	_navigation_buttons.show()
 	var buttons = _page_buttons.get_children()
-	var center_offset = floor(_MAX_PAGE_BUTTONS / 2)
+	@warning_ignore("integer_division")
+	var center_offset = _MAX_PAGE_BUTTONS / 2
 	var start_page = max(0, _current_page - center_offset)
 	for i in _MAX_PAGE_BUTTONS:
 		var page = start_page + i
