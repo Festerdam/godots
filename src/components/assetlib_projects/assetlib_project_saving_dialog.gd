@@ -16,7 +16,8 @@ func _ready():
 
 
 func _save_assetlib_project():
-	_set_message(tr("Downloading..."), "warning")
+	_set_message(tr("Downloading..."), null)
+	_message_label.modulate = Color(1, 1, 1, 1)
 	get_ok_button().disabled = true
 	
 	_project_downloader.download_file = Config.DOWNLOADS_PATH.ret().path_join(download_url.get_file())
