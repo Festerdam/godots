@@ -186,7 +186,7 @@ layout_mode = 2
 text = "Last"
 
 [node name="AssetQuerier" type="HTTPRequest" parent="."]
-timeout = 4.0
+timeout = 8.0
 
 [connection signal="text_changed" from="SearchField" to="." method="_on_search_field_text_changed"]
 [connection signal="item_selected" from="FilterSortOptions/VersionOption" to="." method="_fetch_assets"]
