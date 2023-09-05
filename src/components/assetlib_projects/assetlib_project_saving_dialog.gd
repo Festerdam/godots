@@ -7,7 +7,6 @@ const _DIR = preload("res://src/extensions/dir.gd")
 var download_url: String
 
 @onready var _project_downloader: HTTPRequest = $ProjectDownloader
-@onready var _progress_bar: ProgressBar = %ProgressBar
 
 
 func _ready():
@@ -26,12 +25,7 @@ func _save_assetlib_project():
 		_error(error_string(err))
 		get_ok_button().disabled = false
 	
-	_progress_bar.show()
-	# TODO generalize it, since it's been stolen from another place.
 	while _project_downloader.get_http_client_status() != HTTPClient.STATUS_DISCONNECTED:
-		if _project_downloader.get_body_size() > 0:
-			_progress_bar.max_value = _project_downloader.get_body_size()
-			_progress_bar.value = _project_downloader.get_downloaded_bytes()
 		if _project_downloader.get_http_client_status() == HTTPClient.STATUS_BODY:
 			if _project_downloader.get_body_size() > 0:
 				_message_label.text = "%s (%s / %s)..." % [
@@ -40,30 +34,22 @@ func _save_assetlib_project():
 					String.humanize_size(_project_downloader.get_body_size())
 				]
 			else:
-				_progress_bar.hide()
 				_message_label.text = "%s (%s)..." % [
 					tr("Downloading"),
 					String.humanize_size(_project_downloader.get_downloaded_bytes())
 				]
 		if _project_downloader.get_http_client_status() == HTTPClient.STATUS_RESOLVING:
 			_message_label.text = tr("Resolving...")
-			_progress_bar.value = 0
-			_progress_bar.max_value = 1
 		elif _project_downloader.get_http_client_status() == HTTPClient.STATUS_CONNECTING:
 			_message_label.text = tr("Connecting...")
-			_progress_bar.value = 0
-			_progress_bar.max_value = 1
 		elif _project_downloader.get_http_client_status() == HTTPClient.STATUS_REQUESTING:
 			_message_label.text = tr("Requesting...")
-			_progress_bar.value = 0
-			_progress_bar.max_value = 1
 		await get_tree().create_timer(0.1).timeout
 
 
 func _on_project_downloader_request_completed(result: int,
 		response_code: int, _headers: PackedStringArray,
 		_body: PackedByteArray):
-	_progress_bar.hide()
 	if result != HTTPRequest.RESULT_SUCCESS or response_code != 200:
 		_error(tr("Download failed."))
 		get_ok_button().disabled = false
