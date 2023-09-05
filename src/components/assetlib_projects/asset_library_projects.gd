@@ -142,34 +142,15 @@ func _display_navigation():
 		return
 	_navigation_buttons.show()
 	var buttons = _page_buttons.get_children()
-#	var needed_button_amount = min(10, _current_assets.pages - _current_page)
-#	_clear_navigation_buttons()
-#	for i in needed_button_amount:
-#		_page_buttons[i].show()
-	if _current_page <= _MAX_PAGE_BUTTONS / 2 or _current_assets.pages <= _MAX_PAGE_BUTTONS:
-		var needed_button_amount = min(_MAX_PAGE_BUTTONS, _current_assets.pages)
-		for i in needed_button_amount:
-			buttons[i].show()
-			buttons[i].text = str(i + 1)
-			buttons[i].disabled = false
-			if i == _current_page:
-				buttons[i].disabled = true
-	elif _current_page + _MAX_PAGE_BUTTONS / 2 + 1 > _current_assets.pages:
-		var needed_button_amount = _MAX_PAGE_BUTTONS
-		for i in needed_button_amount:
-			buttons[i].show()
-			buttons[i].text = str(i + 1 + _current_assets.pages - _MAX_PAGE_BUTTONS)
-			buttons[i].disabled = false
-			if i + _current_assets.pages - _MAX_PAGE_BUTTONS == _current_page:
-				buttons[i].disabled = true
-	else:
-		var needed_button_amount = _MAX_PAGE_BUTTONS
-		for i in needed_button_amount:
-			buttons[i].show()
-			buttons[i].text = str(i + 1 + _current_page + _MAX_PAGE_BUTTONS / 2 - _MAX_PAGE_BUTTONS)
-			buttons[i].disabled = false
-			if i + _current_page + _MAX_PAGE_BUTTONS / 2 - _MAX_PAGE_BUTTONS == _current_page:
-				buttons[i].disabled = true
+	var center_offset = floor(_MAX_PAGE_BUTTONS / 2)
+	var start_page = max(0, _current_page - center_offset)
+	for i in _MAX_PAGE_BUTTONS:
+		var page = start_page + i
+		if page > _current_assets.pages - 1:
+			break
+		buttons[i].show()
+		buttons[i].text = str(start_page + i + 1)
+		buttons[i].disabled = start_page + i == _current_page
 
 
 ## Clears all assets being displayed.
