@@ -47,6 +47,22 @@ func _ready():
 				_on_page_button_pressed(button)
 		)
 	
+	_navigation_buttons.get_node("FirstButton").pressed.connect(func():
+		_current_page = 0
+	)
+	_navigation_buttons.get_node("PreviousButton").pressed.connect(func():
+		_current_page = max(0, _current_page - 1)
+	)
+	_navigation_buttons.get_node("NextButton").pressed.connect(func():
+		if _current_assets:
+			_current_page = min(_current_assets.pages - 1, _current_page + 1)
+		else:
+			_current_page = 0
+	)
+	_navigation_buttons.get_node("LastButton").pressed.connect(func():
+		_current_page = _current_assets.pages - 1 if _current_assets else 0
+	)
+	
 	await _setup_version_button()
 	
 	_fetch_assets()
