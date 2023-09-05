@@ -1,0 +1,129 @@
+extends NewProjectDialog
+
+
+const _ZIP = preload("res://src/extensions/zip.gd")
+const _DIR = preload("res://src/extensions/dir.gd")
+
+var download_url: String
+
+@onready var _project_downloader: HTTPRequest = $ProjectDownloader
+@onready var _progress_bar: ProgressBar = %ProgressBar
+
+
+func _ready():
+	handle_creation = false
+	dialog_hide_on_ok = false
+	super._ready()
+
+
+func _save_assetlib_project():
+	_set_message(tr("Downloading..."), "warning")
+	get_ok_button().disabled = true
+	
+	_project_downloader.download_file = Config.DOWNLOADS_PATH.ret().path_join(download_url.get_file())
+	var err = _project_downloader.request(download_url)
+	if err != OK:
+		_error(error_string(err))
+		get_ok_button().disabled = false
+	
+	_progress_bar.show()
+	# TODO generalize it, since it's been stolen from another place.
+	while _project_downloader.get_http_client_status() != HTTPClient.STATUS_DISCONNECTED:
+		if _project_downloader.get_body_size() > 0:
+			_progress_bar.max_value = _project_downloader.get_body_size()
+			_progress_bar.value = _project_downloader.get_downloaded_bytes()
+		if _project_downloader.get_http_client_status() == HTTPClient.STATUS_BODY:
+			if _project_downloader.get_body_size() > 0:
+				_message_label.text = "%s (%s / %s)..." % [
+					tr("Downloading"),
+					String.humanize_size(_project_downloader.get_downloaded_bytes()),
+					String.humanize_size(_project_downloader.get_body_size())
+				]
+			else:
+				_progress_bar.hide()
+				_message_label.text = "%s (%s)..." % [
+					tr("Downloading"),
+					String.humanize_size(_project_downloader.get_downloaded_bytes())
+				]
+		if _project_downloader.get_http_client_status() == HTTPClient.STATUS_RESOLVING:
+			_message_label.text = tr("Resolving...")
+			_progress_bar.value = 0
+			_progress_bar.max_value = 1
+		elif _project_downloader.get_http_client_status() == HTTPClient.STATUS_CONNECTING:
+			_message_label.text = tr("Connecting...")
+			_progress_bar.value = 0
+			_progress_bar.max_value = 1
+		elif _project_downloader.get_http_client_status() == HTTPClient.STATUS_REQUESTING:
+			_message_label.text = tr("Requesting...")
+			_progress_bar.value = 0
+			_progress_bar.max_value = 1
+		await get_tree().create_timer(0.1).timeout
+
+
+func _on_project_downloader_request_completed(result: int,
+		response_code: int, _headers: PackedStringArray,
+		_body: PackedByteArray):
+	_progress_bar.hide()
+	if result != HTTPRequest.RESULT_SUCCESS or response_code != 200:
+		_error(tr("Download failed."))
+		get_ok_button().disabled = false
+		_download_cleanup()
+		return
+	
+	var dir = _project_path_line_edit.text.strip_edges()
+	_ZIP.unzip(_project_downloader.download_file, dir.get_base_dir())
+	
+	var zip = ZIPReader.new()
+	zip.open(_project_downloader.download_file)
+	var err = _unzip_to_path(zip, dir)
+	if err != OK:
+		assert(err != ERR_FILE_NOT_FOUND)
+		_error(error_string(err))
+		get_ok_button().disabled = false
+		_download_cleanup()
+		return
+
+	var cfg = ConfigFile.new()
+	err = cfg.load(dir.path_join("project.godot"))
+	if err != OK:
+		_error(error_string(err))
+		get_ok_button().disabled = false
+		_download_cleanup()
+		return
+	cfg.set_value("application", "config/name", name)
+	err = cfg.save(dir.path_join("project.godot"))
+	if err != OK:
+		_error(error_string(err))
+		get_ok_button().disabled = false
+		_download_cleanup()
+		return
+	
+	_success("Download completed.")
+	_download_cleanup()
+	created.emit(dir)
+
+
+func _unzip_to_path(zip: ZIPReader, destiny: String) -> Error:
+	var files = zip.get_files()
+	var err
+	
+	for zip_file_name in files:
+		if zip_file_name == files[0]:
+			continue
+		var target_file_name = destiny.path_join(zip_file_name.split("/", false, 1)[1])
+		if zip_file_name.ends_with("/"):
+			err = DirAccess.make_dir_recursive_absolute(target_file_name)
+			if err != OK:
+				return err
+		else:
+			var file_contents = zip.read_file(zip_file_name)
+			var file = FileAccess.open(target_file_name, FileAccess.WRITE)
+			if not file:
+				return FileAccess.get_open_error()
+			file.store_buffer(file_contents)
+			file.close()
+	return OK
+
+
+func _download_cleanup():
+	DirAccess.remove_absolute(Config.DOWNLOADS_PATH.ret().path_join(download_url.get_file()))

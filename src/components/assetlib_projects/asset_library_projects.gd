@@ -3,6 +3,9 @@ extends VBoxContainer
 ## (ie. projects available in the asset library).
 
 
+## The projects menu, to update the project list, when needed.
+var projects: Control
+
 const _ASSET_QUERY_PREFIX = "https://godotengine.org/asset-library/api/asset?"
 const _ASSETS_PER_PAGE = 40
 const _TUXFAMILY_VERSION_LISTING = "https://downloads.tuxfamily.org/godotengine/"
@@ -85,7 +88,8 @@ func _display_assets(current_assets: Dictionary):
 				asset_data.title,
 				asset_data.category,
 				asset_data.author,
-				asset_data.cost
+				asset_data.cost,
+				projects
 		)
 		
 		_asset_list.add_child(asset)
