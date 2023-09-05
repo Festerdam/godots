@@ -8,6 +8,7 @@ var projects: Control
 
 const _ASSET_QUERY_PREFIX = "https://godotengine.org/asset-library/api/asset?"
 const _ASSETS_PER_PAGE = 40
+const _MAX_PAGE_BUTTONS = 10
 const _TUXFAMILY_VERSION_LISTING = "https://downloads.tuxfamily.org/godotengine/"
 # Shouldn't we be using class_name in xml.gd?
 const _EXML = preload("res://src/extensions/xml.gd")
@@ -24,6 +25,7 @@ var _last_text_edit: int = 0
 @onready var _support_options: MenuButton = %SupportOptions
 @onready var _asset_querier: HTTPRequest = $AssetQuerier
 @onready var _asset_list: HFlowContainer = %AssetList
+@onready var _navigation_buttons: HBoxContainer = %NavigationButtons
 
 
 func _ready():
@@ -31,6 +33,16 @@ func _ready():
 			get_theme_stylebox("search_panel", "ProjectManager"))
 	
 	_support_options.get_popup().id_pressed.connect(_fetch_assets)
+	
+	# Populate PageButtons
+	var page_buttons = _navigation_buttons.get_node("PageButtons")
+	for i in _MAX_PAGE_BUTTONS:
+		var button = Button.new()
+		button.name = "PageButton" + str(i)
+		page_buttons.add_child(button)
+		button.pressed.connect(func():
+				_on_page_button_pressed(button)
+		)
 	
 	await _setup_version_button()
 	
@@ -81,6 +93,8 @@ func _display_assets(current_assets: Dictionary):
 	if current_assets == {} or current_assets.total_items == 0:
 		return
 	
+	_display_navigation()
+	
 	var assets = current_assets.result
 	for asset_data in assets:
 		var asset = _ASSET_LISTING.instantiate().init_asset_listing_interactible(
@@ -95,8 +109,15 @@ func _display_assets(current_assets: Dictionary):
 		_asset_list.add_child(asset)
 
 
+## Sets up the navigation buttons, taking into account number of pages
+## and current page number.
+func _display_navigation():
+	pass # TODO 
+
+
 ## Clears all assets being displayed.
 func _clear_asset_display():
+	_navigation_buttons.hide()
 	for child in _asset_list.get_children():
 		child.queue_free()
 
@@ -203,3 +224,7 @@ func _generate_query_dictionary() -> Dictionary:
 			result.reverse = true
 	
 	return result
+
+
+func _on_page_button_pressed(button: Button):
+	pass # TODO
