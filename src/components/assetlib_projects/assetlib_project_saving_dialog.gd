@@ -57,6 +57,7 @@ func _on_project_downloader_request_completed(result: int,
 		return
 	
 	var dir = _project_path_line_edit.text.strip_edges()
+	var project_name = _project_name_edit.text.strip_edges()
 	_ZIP.unzip(_project_downloader.download_file, dir.get_base_dir())
 	
 	var zip = ZIPReader.new()
@@ -76,7 +77,7 @@ func _on_project_downloader_request_completed(result: int,
 		get_ok_button().disabled = false
 		_download_cleanup()
 		return
-	cfg.set_value("application", "config/name", name)
+	cfg.set_value("application", "config/name", project_name)
 	err = cfg.save(dir.path_join("project.godot"))
 	if err != OK:
 		_error(error_string(err))
