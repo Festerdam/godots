@@ -123,7 +123,7 @@ func _fetch_assets(_trash = null, reset_page_number: bool = true):
 	var query = _generate_query(_generate_query_dictionary())
 	_asset_querier.cancel_request()
 	_asset_querier.request(query)
-	_message(false, tr("Fetching assets..."))
+	_message(false, tr("Fetching assets…"))
 
 
 func _on_asset_querier_request_completed(result: int, response_code: int,
