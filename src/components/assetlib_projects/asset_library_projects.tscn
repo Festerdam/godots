@@ -190,19 +190,23 @@ layout_mode = 2
 text = "Last"
 
 [node name="ColorRect" type="ColorRect" parent="MarginContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 color = Color(0.211765, 0.239216, 0.290196, 0.694118)
 
-[node name="CenterContainer" type="CenterContainer" parent="MarginContainer"]
+[node name="OverlayContents" type="CenterContainer" parent="MarginContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/CenterContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/OverlayContents"]
 layout_mode = 2
 
-[node name="StatusLabel" type="Label" parent="MarginContainer/CenterContainer/VBoxContainer"]
+[node name="StatusLabel" type="Label" parent="MarginContainer/OverlayContents/VBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 
-[node name="RefreshButton" type="Button" parent="MarginContainer/CenterContainer/VBoxContainer"]
+[node name="RefreshButton" type="Button" parent="MarginContainer/OverlayContents/VBoxContainer"]
+unique_name_in_owner = true
 visible = false
 layout_mode = 2
 text = "Refresh"
@@ -214,4 +218,5 @@ timeout = 8.0
 [connection signal="item_selected" from="FilterSortOptions/VersionOption" to="." method="_fetch_assets"]
 [connection signal="item_selected" from="FilterSortOptions/SortOption" to="." method="_fetch_assets"]
 [connection signal="item_selected" from="FilterSortOptions/CategoryOption" to="." method="_fetch_assets"]
+[connection signal="pressed" from="MarginContainer/OverlayContents/VBoxContainer/RefreshButton" to="." method="_on_refresh_button_pressed"]
 [connection signal="request_completed" from="AssetQuerier" to="." method="_on_asset_querier_request_completed"]

@@ -37,6 +37,10 @@ var _last_text_edit: int = 0
 @onready var _previous_button: Button = _navigation_buttons.get_node("PreviousButton")
 @onready var _next_button: Button = _navigation_buttons.get_node("NextButton")
 @onready var _last_button: Button = _navigation_buttons.get_node("LastButton")
+@onready var _color_rect: ColorRect = %ColorRect
+@onready var _status_label: Label = %StatusLabel
+@onready var _refresh_button: Button = %RefreshButton
+@onready var _overlay_contents: CenterContainer = %OverlayContents
 
 
 func _ready():
@@ -99,20 +103,24 @@ func _fetch_assets(_trash = null, reset_page_number: bool = true):
 	var query = _generate_query(_generate_query_dictionary())
 	_asset_querier.cancel_request()
 	_asset_querier.request(query)
+	_message(false, tr("Fetching assets..."))
 
 
 func _on_asset_querier_request_completed(result: int, response_code: int,
 		_headers: PackedStringArray, byte_body: PackedByteArray):
 	if result != HTTPRequest.RESULT_SUCCESS or response_code != 200:
+		_message(true, tr("Fetching assets failed."))
 		_current_assets = {}
 		return
 	
 	var body = byte_body.get_string_from_ascii()
 	var json = JSON.new()
 	if json.parse(body) != OK or not json.data is Dictionary:
+		_message(true, tr("Received unexpected data."))
 		_current_assets = {}
 		return
 	_current_assets = json.data
+	_clear_message()
 
 
 func _display_assets(current_assets: Dictionary):
@@ -192,9 +200,11 @@ func _fetch_versions() -> Array[String]:
 	var request = HTTPRequest.new()
 	add_child(request)
 	request.request(_TUXFAMILY_VERSION_LISTING)
+	_message(false, tr("Fetching version info…"))
 	var resp = await request.request_completed
 	request.queue_free()
 	if resp[0] != HTTPRequest.RESULT_SUCCESS or resp[1] != 200:
+		_message(true, tr("Version info fetching failed."))
 		return []
 	
 	var body = resp[3].get_string_from_ascii()
@@ -292,3 +302,22 @@ func _generate_query_dictionary() -> Dictionary:
 
 func _on_page_button_pressed(button: Button):
 	_current_page = int(button.text) - 1
+
+
+func _message(failure: bool, message: String):
+	_overlay_contents.show()
+	_status_label.text = message
+	_color_rect.show()
+	if failure:
+		_refresh_button.show()
+	else:
+		_refresh_button.hide()
+
+
+func _clear_message():
+	_color_rect.hide()
+	_overlay_contents.hide()
+
+
+func _on_refresh_button_pressed():
+	_fetch_assets()
