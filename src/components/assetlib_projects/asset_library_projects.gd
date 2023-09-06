@@ -326,6 +326,9 @@ func _on_page_button_pressed(button: Button):
 	_current_page = int(button.text) - 1
 
 
+## Displays the overlay screen with the message [param message].  If
+## [param failute] is set to true also displays a button to retry the
+## query.
 func _message(failure: bool, message: String):
 	_overlay_contents.show()
 	_status_label.text = message
@@ -336,6 +339,7 @@ func _message(failure: bool, message: String):
 		_refresh_button.hide()
 
 
+## Hides the loading/message overlay.
 func _clear_message():
 	_color_rect.hide()
 	_overlay_contents.hide()

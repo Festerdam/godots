@@ -9,6 +9,7 @@ extends AssetListing
 
 const _ASSET_DIALOG_SCENE = preload("res://src/components/assetlib_projects/asset_dialog.tscn")
 
+## Asset id within the asset library.
 var _id: int
 var _asset_dialog: ConfirmationDialog
 var _projects: Control
@@ -24,6 +25,11 @@ func _ready():
 	add_child(_asset_dialog)
 
 
+## Initializes the class. [param id] is the id of the asset within the
+## asset library.  [param title], [param category], [param author],
+## [param license] have the same meaning as in
+## [method AssetListing.init_asset_listing].  [param projects] is the
+## root node for the local projects tab.
 func init_asset_listing_interactible(id: int, title: String,
 		category: String, author: String, license: String,
 		projects: Control):

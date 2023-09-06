@@ -1,9 +1,16 @@
 extends NewProjectDialog
+## A custom project dialog for projects acquired from the asset library.
+##
+## In additon to defining a poject name and path, it also downloads the
+## project from the library.
 
 
 const _ZIP = preload("res://src/extensions/zip.gd")
 const _DIR = preload("res://src/extensions/dir.gd")
 
+## The url of the zip to download.  This is generally the
+## [code]download_url[/code] field from asset's description given by
+## asset library's API.
 var download_url: String
 
 @onready var _project_downloader: HTTPRequest = $ProjectDownloader
@@ -91,6 +98,8 @@ func _on_project_downloader_request_completed(result: int,
 	created.emit(dir)
 
 
+## A procedure that unzips a zip file to a target directory, keeping the
+## target directory as root, rather than the zip's root directory.
 func _unzip_to_path(zip: ZIPReader, destiny: String) -> Error:
 	var files = zip.get_files()
 	var err
@@ -113,5 +122,6 @@ func _unzip_to_path(zip: ZIPReader, destiny: String) -> Error:
 	return OK
 
 
+## Removes any download/install artifacts.
 func _download_cleanup():
 	DirAccess.remove_absolute(Config.DOWNLOADS_PATH.ret().path_join(download_url.get_file()))

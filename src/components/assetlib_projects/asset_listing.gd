@@ -24,6 +24,11 @@ func _ready():
 	_license_node.text = _license
 
 
+## Initializes the class.  [param title] is the title of the asset,
+## [param category] is the category name the asset belongs to,
+## [param author] is the author of the asset, and [param license] is the
+## license under which the asset has been released (called
+## [code]cost[/code] within the asset library's API).
 func init_asset_listing(title: String, category: String, author: String,
 		license: String):
 	_title = title
