@@ -40,7 +40,7 @@ var _last_text_edit: int = 0
 
 
 func _ready():
-	$ScrollContainer.add_theme_stylebox_override("panel",
+	$MarginContainer/ScrollContainer.add_theme_stylebox_override("panel",
 			get_theme_stylebox("search_panel", "ProjectManager"))
 	
 	_support_options.get_popup().id_pressed.connect(_fetch_assets)

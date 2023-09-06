@@ -111,79 +111,87 @@ popup/item_2/text = "Testing"
 popup/item_2/checkable = 1
 popup/item_2/id = 2
 
-[node name="ScrollContainer" type="ScrollContainer" parent="."]
+[node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/ScrollContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="NavigationButtons" type="HBoxContainer" parent="ScrollContainer/VBoxContainer"]
+[node name="NavigationButtons" type="HBoxContainer" parent="MarginContainer/ScrollContainer/VBoxContainer"]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 alignment = 1
 
-[node name="FirstButton" type="Button" parent="ScrollContainer/VBoxContainer/NavigationButtons"]
+[node name="FirstButton" type="Button" parent="MarginContainer/ScrollContainer/VBoxContainer/NavigationButtons"]
 layout_mode = 2
 text = "First"
 
-[node name="PreviousButton" type="Button" parent="ScrollContainer/VBoxContainer/NavigationButtons"]
+[node name="PreviousButton" type="Button" parent="MarginContainer/ScrollContainer/VBoxContainer/NavigationButtons"]
 layout_mode = 2
 text = "Previous"
 
-[node name="VSeparator" type="VSeparator" parent="ScrollContainer/VBoxContainer/NavigationButtons"]
+[node name="VSeparator" type="VSeparator" parent="MarginContainer/ScrollContainer/VBoxContainer/NavigationButtons"]
 layout_mode = 2
 
-[node name="PageButtons" type="HBoxContainer" parent="ScrollContainer/VBoxContainer/NavigationButtons"]
+[node name="PageButtons" type="HBoxContainer" parent="MarginContainer/ScrollContainer/VBoxContainer/NavigationButtons"]
 layout_mode = 2
 
-[node name="VSeparator2" type="VSeparator" parent="ScrollContainer/VBoxContainer/NavigationButtons"]
+[node name="VSeparator2" type="VSeparator" parent="MarginContainer/ScrollContainer/VBoxContainer/NavigationButtons"]
 layout_mode = 2
 
-[node name="NextButton" type="Button" parent="ScrollContainer/VBoxContainer/NavigationButtons"]
+[node name="NextButton" type="Button" parent="MarginContainer/ScrollContainer/VBoxContainer/NavigationButtons"]
 layout_mode = 2
 text = "Next"
 
-[node name="LastButton" type="Button" parent="ScrollContainer/VBoxContainer/NavigationButtons"]
+[node name="LastButton" type="Button" parent="MarginContainer/ScrollContainer/VBoxContainer/NavigationButtons"]
 layout_mode = 2
 text = "Last"
 
-[node name="AssetList" type="HFlowContainer" parent="ScrollContainer/VBoxContainer"]
+[node name="AssetList" type="HFlowContainer" parent="MarginContainer/ScrollContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="NavigationButtons2" type="HBoxContainer" parent="ScrollContainer/VBoxContainer"]
+[node name="NavigationButtons2" type="HBoxContainer" parent="MarginContainer/ScrollContainer/VBoxContainer"]
 visible = false
 layout_mode = 2
 size_flags_vertical = 8
 alignment = 1
 
-[node name="FirstButton" type="Button" parent="ScrollContainer/VBoxContainer/NavigationButtons2"]
+[node name="FirstButton" type="Button" parent="MarginContainer/ScrollContainer/VBoxContainer/NavigationButtons2"]
 layout_mode = 2
 text = "First"
 
-[node name="PreviousButton" type="Button" parent="ScrollContainer/VBoxContainer/NavigationButtons2"]
+[node name="PreviousButton" type="Button" parent="MarginContainer/ScrollContainer/VBoxContainer/NavigationButtons2"]
 layout_mode = 2
 text = "Previous"
 
-[node name="VSeparator" type="VSeparator" parent="ScrollContainer/VBoxContainer/NavigationButtons2"]
+[node name="VSeparator" type="VSeparator" parent="MarginContainer/ScrollContainer/VBoxContainer/NavigationButtons2"]
 layout_mode = 2
 
-[node name="PageButtons" type="HBoxContainer" parent="ScrollContainer/VBoxContainer/NavigationButtons2"]
+[node name="PageButtons" type="HBoxContainer" parent="MarginContainer/ScrollContainer/VBoxContainer/NavigationButtons2"]
 layout_mode = 2
 
-[node name="VSeparator2" type="VSeparator" parent="ScrollContainer/VBoxContainer/NavigationButtons2"]
+[node name="VSeparator2" type="VSeparator" parent="MarginContainer/ScrollContainer/VBoxContainer/NavigationButtons2"]
 layout_mode = 2
 
-[node name="NextButton" type="Button" parent="ScrollContainer/VBoxContainer/NavigationButtons2"]
+[node name="NextButton" type="Button" parent="MarginContainer/ScrollContainer/VBoxContainer/NavigationButtons2"]
 layout_mode = 2
 text = "Next"
 
-[node name="LastButton" type="Button" parent="ScrollContainer/VBoxContainer/NavigationButtons2"]
+[node name="LastButton" type="Button" parent="MarginContainer/ScrollContainer/VBoxContainer/NavigationButtons2"]
 layout_mode = 2
 text = "Last"
+
+[node name="ColorRect" type="ColorRect" parent="MarginContainer"]
+layout_mode = 2
+color = Color(0.211765, 0.239216, 0.290196, 0.694118)
 
 [node name="AssetQuerier" type="HTTPRequest" parent="."]
 timeout = 8.0
