@@ -23,6 +23,7 @@ var _current_page: int = 0:
 var _internal_current_page: int = 0
 var _current_assets: Dictionary: set = _display_assets
 var _last_text_edit: int = 0
+var _fetched_versions: bool = false
 
 @onready var _search_field: LineEdit = %SearchField
 @onready var _version_option: OptionButton = %VersionOption
@@ -98,6 +99,8 @@ func _on_search_field_text_changed(_new_text: String):
 
 
 func _fetch_assets(_trash = null, reset_page_number: bool = true):
+	if not _fetched_versions:
+		return
 	if reset_page_number:
 		_internal_current_page = 0
 	var query = _generate_query(_generate_query_dictionary())
@@ -198,6 +201,7 @@ func _clear_asset_display():
 ## on TuxFamily.  Returns [code][][/code] on failure.
 func _fetch_versions() -> Array[String]:
 	var request = HTTPRequest.new()
+	request.timeout = 8
 	add_child(request)
 	request.request(_TUXFAMILY_VERSION_LISTING)
 	_message(false, tr("Fetching version info…"))
@@ -214,6 +218,7 @@ func _fetch_versions() -> Array[String]:
 	result.assign(
 			regex.search_all(body).map(func (x): return x.get_string())
 	)
+	_fetched_versions = true
 	return result
 
 
@@ -320,4 +325,8 @@ func _clear_message():
 
 
 func _on_refresh_button_pressed():
-	_fetch_assets()
+	if _fetched_versions:
+		_fetch_assets()
+	else:
+		await _setup_version_button()
+		_fetch_assets()
