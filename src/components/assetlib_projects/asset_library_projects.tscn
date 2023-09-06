@@ -83,6 +83,7 @@ layout_mode = 2
 text = "Site:"
 
 [node name="SiteOption" type="OptionButton" parent="FilterSortOptions"]
+unique_name_in_owner = true
 editor_description = "Also only has one option in the official project manager.  I don't know why it's there, since there's seemingly no way to add other sources for assets."
 layout_mode = 2
 size_flags_horizontal = 3

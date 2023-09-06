@@ -23,12 +23,27 @@ var _current_page: int = 0:
 var _internal_current_page: int = 0
 var _current_assets: Dictionary: set = _display_assets
 var _last_text_edit: int = 0
-var _fetched_versions: bool = false
+var _fetched_versions: bool = false:
+	set(value):
+		_fetched_versions = value
+		if not value:
+			_search_field.editable = false
+			_version_option.disabled = true
+			_sort_option.disabled = true
+			_category_option.disabled = true
+			_site_option.disabled = true
+		else:
+			_search_field.editable = true
+			_version_option.disabled = false
+			_sort_option.disabled = false
+			_category_option.disabled = false
+			_site_option.disabled = false
 
 @onready var _search_field: LineEdit = %SearchField
 @onready var _version_option: OptionButton = %VersionOption
 @onready var _sort_option: OptionButton = %SortOption
 @onready var _category_option: OptionButton = %CategoryOption
+@onready var _site_option: OptionButton = %SiteOption
 @onready var _support_options: MenuButton = %SupportOptions
 @onready var _asset_querier: HTTPRequest = $AssetQuerier
 @onready var _asset_list: HFlowContainer = %AssetList
@@ -47,6 +62,8 @@ var _fetched_versions: bool = false
 func _ready():
 	$MarginContainer/ScrollContainer.add_theme_stylebox_override("panel",
 			get_theme_stylebox("search_panel", "ProjectManager"))
+	
+	_fetched_versions = false
 	
 	_support_options.get_popup().id_pressed.connect(_fetch_assets)
 	
