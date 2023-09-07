@@ -5,7 +5,6 @@ extends NewProjectDialog
 ## project from the library.
 
 
-const _ZIP = preload("res://src/extensions/zip.gd")
 const _DIR = preload("res://src/extensions/dir.gd")
 
 ## The url of the zip to download.  This is generally the
@@ -66,7 +65,6 @@ func _on_project_downloader_request_completed(result: int,
 	
 	var dir = _project_path_line_edit.text.strip_edges()
 	var project_name = _project_name_edit.text.strip_edges()
-	_ZIP.unzip(_project_downloader.download_file, dir.get_base_dir())
 	
 	var zip = ZIPReader.new()
 	zip.open(_project_downloader.download_file)

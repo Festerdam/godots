@@ -10,7 +10,6 @@ const _ASSET_QUERY_PREFIX = "https://godotengine.org/asset-library/api/asset?"
 const _ASSETS_PER_PAGE = 40
 const _MAX_PAGE_BUTTONS = 10
 const _TUXFAMILY_VERSION_LISTING = "https://downloads.tuxfamily.org/godotengine/"
-# Shouldn't we be using class_name in xml.gd?
 const _EXML = preload("res://src/extensions/xml.gd")
 const _ASSET_LISTING = preload("res://src/components/assetlib_projects/asset_listing_iteractable.tscn")
 
