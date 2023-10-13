@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://ct6r5vx7pxmuu"]
 
-[ext_resource type="PackedScene" uid="uid://b6v7neuq31y1q" path="res://src/components/projects/new_project_dialog/new_project_dialog.tscn" id="1_nhuek"]
+[ext_resource type="PackedScene" uid="uid://canl4lc1tj7qu" path="res://src/components/projects/new_project_dialog/new_project_dialog.tscn" id="1_nhuek"]
 [ext_resource type="Script" path="res://src/components/assetlib_projects/assetlib_project_saving_dialog.gd" id="2_0gr3c"]
 
 [node name="AssetlibProjectSavingDialog" instance=ExtResource("1_nhuek")]

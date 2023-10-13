@@ -1,9 +1,11 @@
-extends NewProjectDialog
+extends "res://src/components/projects/install_project_dialog/install_project_dialog.gd"
 ## A custom project dialog for projects acquired from the asset library.
 ##
 ## In additon to defining a poject name and path, it also downloads the
 ## project from the library.
 
+
+signal created(path)
 
 const _DIR = preload("res://src/extensions/dir.gd")
 
@@ -16,7 +18,6 @@ var download_url: String
 
 
 func _ready():
-	handle_creation = false
 	dialog_hide_on_ok = false
 	super._ready()
 
