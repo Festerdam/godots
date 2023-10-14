@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://omgg45dpxftx"]
+[gd_scene load_steps=16 format=3 uid="uid://omgg45dpxftx"]
 
 [ext_resource type="Script" path="res://src/main/auto_updates.gd" id="2_04iqm"]
 [ext_resource type="PackedScene" uid="uid://csgrsfoydw3m4" path="res://src/components/title_bar/title_bar.tscn" id="2_bjhyn"]
